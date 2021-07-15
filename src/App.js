@@ -1,25 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+const BASE_URL = "https://official-joke-api.appspot.com/random_ten";
+  
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      stateData: [],
+    }
+  }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  componentDidMount = () => {
+    fetch(BASE_URL)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      this.setState({
+        stateData: data
+      });
+      console.log(this.state.stateData);
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        {
+          this.state.stateData.map((dataRow) => {
+            return <div key={dataRow.id}>{dataRow.id}, {dataRow.setup}</div>
+          })
+        }
+      </div>
+    )
+  }
 }
 
 export default App;
