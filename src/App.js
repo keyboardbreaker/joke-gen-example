@@ -1,38 +1,32 @@
 import './App.css';
-import React from 'react';
-const BASE_URL = "https://official-joke-api.appspot.com/random_ten";
-  
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      stateData: [],
-    }
-  }
+import React, { useState, useEffect } from 'react';
 
-  componentDidMount = () => {
-    fetch(BASE_URL)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      this.setState({
-        stateData: data
-      });
-      console.log(this.state.stateData);
-    });
-  }
 
-  render() {
-    return (
-      <div>
-        {
-          this.state.stateData.map((dataRow) => {
-            return <div key={dataRow.id}>{dataRow.id}, {dataRow.setup}</div>
-          })
-        }
-      </div>
-    )
-  }
+const useFetch = () => {
+  const url = "https://interview-assessment.api.avamae.co.uk/api/v1/home/banner-details";
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(async () => {
+    const response = await fetch(url);
+    const data = await response.json();
+    setData(data.Details);
+    setLoading(false);
+
+  }, [])
+  return { data, loading };
 }
 
-export default App;
+export default () => {
+  const { data, loading } = useFetch()
+  console.log(data);
+  return (
+    <section>
+      {loading ?
+        <div>...loading</div> :
+        <div>{data.map(i=>i.Title)}<br/></div>
+      }
+    </section>
+  );
+
+};
